@@ -1,7 +1,3 @@
-let Working;
-let LoopCounter = 0;
-let ExecTime = 0;
-
 this.onmessage = function(M)
 {
     let N1 = M.data[0];
