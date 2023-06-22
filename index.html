@@ -11,11 +11,30 @@
         <a href="AudioText/AudioText.html">Audio text</a><br>
         <a href="GraphHTML/Graph.html">Graph</a><br>
         <a href="Unicode/unicode.htm">Unicode</a><br>
+        <a href="BlockSim/BlockSim.htm">BlockSim</a><br>
         <br>
         <br>
         <a href="https://github.com/andrzejlisek?tab=repositories">Repo</a><br>
         <br>
         <br>
         <a href="HtmlBundle/Index.html">X</a><br>
+        <br>
+        <br>
+        <span id="Info"></span>
+        <script>
+            let X = "";
+            X = X + "User Agent: " + window.navigator.userAgent + "<br><br>";
+            X = X + "App Code Name: " + window.navigator.appCodeName + "<br><br>";
+            X = X + "App Name: " + window.navigator.appName + "<br><br>";
+            X = X + "App Version: " + window.navigator.appVersion + "<br><br>";
+            X = X + "Platform: " + window.navigator.platform + "<br><br>";
+            X = X + "Product: " + window.navigator.product + "<br><br>";
+            X = X + "Product Sub: " + window.navigator.productSub + "<br><br>";
+            X = X + "Vendor: " + window.navigator.vendor + "<br><br>";
+            X = X + "Vendor Sub: " + window.navigator.vendorSub + "<br><br>";
+            X = X + "Language: " + window.navigator.language + "<br><br>";
+            X = X + "OS CPU: " + window.navigator.oscpu + "<br><br>";
+            document.getElementById("Info").innerHTML = X;
+        </script>
     </body>
 </html>
