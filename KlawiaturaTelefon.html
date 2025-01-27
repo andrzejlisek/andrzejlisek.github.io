@@ -49,24 +49,24 @@
     field2.addEventListener('input', KeybEventText);
     field3.addEventListener('input', KeybEventText);
 
-function KeybEventText(E)
-{
-    if (E.data)
+    function KeybEventText(E)
     {
-        printText("" + E.data + "");
+        if (E.data)
+        {
+            printText("" + E.data + "");
+        }
+        else
+        {
+            printText("{" + E.inputType + "}");
+        }
+        
+        if (opts.selectedIndex == 1)
+        {
+            field1.value = "";
+            field2.value = "";
+            field3.value = "";
+        }
     }
-    else
-    {
-        printText("{" + E.inputType + "}");
-    }
-    
-    if (opts.selectedIndex == 1)
-    {
-        field1.value = "";
-        field2.value = "";
-        field3.value = "";
-    }
-}
 
   </script>
 </body>
