@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Test</title>
+  <style>
+        textarea
+        {
+            resize:none;
+            white-space:pre;
+            overflow:auto;
+        }
+  </style>
+</head>
+<body>
+
+  <select id="opts">
+    <option selected="selected">none</option>
+    <option>clear</option>
+  </select>
+
+  <input type="button" id="textclr" value="Clear" onclick="printClear()"><br>
+  <span id="outtext"></span><br>
+  Field 1: <input type="text" id="field1" size="5"><br>
+  Field 2: <input type="password" id="field2" size="5"><br>
+  Field 3: <textarea id="field3" rows="1" cols="5"></textarea><br>
+  <script type='text/javascript'>
+
+    const field1 = document.getElementById("field1");
+    const field2 = document.getElementById("field2");
+    const field3 = document.getElementById("field3");
+    const opts = document.getElementById("opts");
+
+    function printClear()
+    {
+        document.getElementById("outtext").innerHTML = "";
+        field1.value = "";
+        field2.value = "";
+        field3.value = "";
+    }
+  
+    function printText(txt)
+    {
+        document.getElementById("outtext").innerHTML += txt;
+    }
+
+    field1.addEventListener('input', KeybEventText);
+    field2.addEventListener('input', KeybEventText);
+    field3.addEventListener('input', KeybEventText);
+
+function KeybEventText(E)
+{
+    if (E.data)
+    {
+        printText("" + E.data + "");
+    }
+    else
+    {
+        printText("{" + E.inputType + "}");
+    }
+    
+    if (opts.selectedIndex == 1)
+    {
+        field1.value = "";
+        field2.value = "";
+        field3.value = "";
+    }
+}
+
+  </script>
+</body>
+</html>
+
