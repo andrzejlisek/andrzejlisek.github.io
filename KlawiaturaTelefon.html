@@ -18,9 +18,11 @@
 
   <input type="button" value="Clear" onclick="printClear()">
   <input type="button" value="Variant 1" onclick="fieldSetVariant(1)">
-  <input type="button" value="Variant 2" onclick="fieldSetVariant(2)"><br>
+  <input type="button" value="Variant 2" onclick="fieldSetVariant(2)">
+  <input type="button" value="Variant 3" onclick="fieldSetVariant(3)"><br>
   <span id="outtext"></span><br>
-  Field: <input type="password" id="field1" size="5"><input type="text" id="field2" size="5"><br>
+  Field: <input type="password" id="field1" size="5"><input type="text" id="field2" size="5"><textarea id="field3" rows="1" cols="5"></textarea><br>
+  Event info: <input type="checkbox" id="evtInfo"><br>
 
   <script type='text/javascript'>
 
@@ -35,9 +37,14 @@
         document.getElementById("outtext").innerHTML += txt;
     }
     
-    function printBack()
+    function printBackspace()
     {
         document.getElementById("outtext").innerHTML += "[BS]";
+    }
+
+    function printEnter()
+    {
+        document.getElementById("outtext").innerHTML += "[LF]";
     }
 
 
@@ -55,6 +62,7 @@
         if (field) fieldClear();
         document.getElementById("field1").style.display = "none";
         document.getElementById("field2").style.display = "none";
+        document.getElementById("field3").style.display = "none";
         fieldVariant = n;
         switch (fieldVariant)
         {
@@ -63,6 +71,9 @@
                 break;
             case 2:
                 field = document.getElementById("field2");
+                break;
+            case 3:
+                field = document.getElementById("field3");
                 break;
         }
         field.style.display = "";
@@ -91,7 +102,7 @@
         while (t > 0)
         {
             fieldBuf = fieldBuf.slice(0, -1);
-            printBack();
+            printBackspace();
             t--;
         }
         printText(txt);
@@ -99,10 +110,17 @@
         fieldCursor = sel;
     }
 
+    function fieldInputEnter(sel)
+    {
+        printEnter();
+        fieldBuf = fieldBuf + "\n";
+        fieldCursor = sel;
+    }
+
     function fieldInputBackspace(sel)
     {
         fieldBuf = fieldBuf.slice(0, -1);
-        printBack();
+        printBackspace();
         if (sel == 0)
         {
             setTimeout(fieldClear, 0);
@@ -117,15 +135,33 @@
     {
         const sel1 = field.selectionStart;
         const sel2 = field.selectionEnd;
-        if (E.data)
+        if (document.getElementById("evtInfo").checked)
         {
-            fieldInputText("" + E.data + "", sel2);
+            if (E.data)
+            {
+                printText("{" + E.data + "_" + sel2 + "}<br>");
+            }
+            else
+            {
+                printText("{" + E.inputType + "_" + sel2 + "}<br>");
+            }
         }
         else
         {
-            if (E.inputType == "deleteContentBackward")
+            if (E.data)
             {
-                fieldInputBackspace(sel2);
+                fieldInputText("" + E.data + "", sel2);
+            }
+            else
+            {
+                if (E.inputType == "deleteContentBackward")
+                {
+                    fieldInputBackspace(sel2);
+                }
+                if (E.inputType == "insertLineBreak")
+                {
+                    fieldInputEnter(sel2);
+                }
             }
         }
     }
@@ -137,6 +173,9 @@
     document.getElementById("field2").addEventListener('input', fieldEvent);
     document.getElementById("field2").addEventListener('focus', fieldClear);
     document.getElementById("field2").addEventListener('blur', fieldClear);
+    document.getElementById("field3").addEventListener('input', fieldEvent);
+    document.getElementById("field3").addEventListener('focus', fieldClear);
+    document.getElementById("field3").addEventListener('blur', fieldClear);
     fieldSetVariant(1);
 
   </script>
