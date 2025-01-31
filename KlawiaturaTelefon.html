@@ -16,58 +16,128 @@
 </head>
 <body>
 
-  <select id="opts">
-    <option selected="selected">none</option>
-    <option>clear</option>
-  </select>
-
-  <input type="button" id="textclr" value="Clear" onclick="printClear()"><br>
+  <input type="button" value="Clear" onclick="printClear()">
+  <input type="button" value="Variant 1" onclick="fieldSetVariant(1)">
+  <input type="button" value="Variant 2" onclick="fieldSetVariant(2)"><br>
   <span id="outtext"></span><br>
-  Field 1: <input type="text" id="field1" size="5"><br>
-  Field 2: <input type="password" id="field2" size="5"><br>
-  Field 3: <textarea id="field3" rows="1" cols="5"></textarea><br>
-  <script type='text/javascript'>
+  Field: <input type="password" id="field1" size="5"><input type="text" id="field2" size="5"><br>
 
-    const field1 = document.getElementById("field1");
-    const field2 = document.getElementById("field2");
-    const field3 = document.getElementById("field3");
-    const opts = document.getElementById("opts");
+  <script type='text/javascript'>
 
     function printClear()
     {
         document.getElementById("outtext").innerHTML = "";
-        field1.value = "";
-        field2.value = "";
-        field3.value = "";
+        field.value = "";
     }
   
     function printText(txt)
     {
         document.getElementById("outtext").innerHTML += txt;
     }
-
-    field1.addEventListener('input', KeybEventText);
-    field2.addEventListener('input', KeybEventText);
-    field3.addEventListener('input', KeybEventText);
-
-    function KeybEventText(E)
+    
+    function printBack()
     {
-        if (E.data)
+        document.getElementById("outtext").innerHTML += "[BS]";
+    }
+
+
+
+
+
+    let field = null;
+    let fieldVariant = 1;
+    let fieldCursor = -1;
+    let fieldBuf = "";
+
+
+    function fieldSetVariant(n)
+    {
+        if (field) fieldClear();
+        document.getElementById("field1").style.display = "none";
+        document.getElementById("field2").style.display = "none";
+        fieldVariant = n;
+        switch (fieldVariant)
         {
-            printText("" + E.data + "");
+            case 1:
+                field = document.getElementById("field1");
+                break;
+            case 2:
+                field = document.getElementById("field2");
+                break;
+        }
+        field.style.display = "";
+        fieldClear();
+    }
+    
+    function fieldClear()
+    {
+        fieldBuf = " ";
+        field.value = " ";
+        field.setSelectionRange(1, 1);
+        fieldCursor = 1;
+    }
+
+    function fieldInputText(txt, sel)
+    {
+        let t = txt.length - (sel - fieldCursor);
+        if (fieldBuf.length > t)
+        {
+            while ((t > 0) && (txt.length > 0) && (fieldBuf[fieldBuf.length - t] == txt[0]))
+            {
+                txt = txt.slice(1);
+                t--;
+            }
+        }
+        while (t > 0)
+        {
+            fieldBuf = fieldBuf.slice(0, -1);
+            printBack();
+            t--;
+        }
+        printText(txt);
+        fieldBuf = fieldBuf + txt;
+        fieldCursor = sel;
+    }
+
+    function fieldInputBackspace(sel)
+    {
+        fieldBuf = fieldBuf.slice(0, -1);
+        printBack();
+        if (sel == 0)
+        {
+            setTimeout(fieldClear, 0);
         }
         else
         {
-            printText("{" + E.inputType + "}");
-        }
-        
-        if (opts.selectedIndex == 1)
-        {
-            field1.value = "";
-            field2.value = "";
-            field3.value = "";
+            fieldCursor = sel;
         }
     }
+
+    function fieldEvent(E)
+    {
+        const sel1 = field.selectionStart;
+        const sel2 = field.selectionEnd;
+        if (E.data)
+        {
+            fieldInputText("" + E.data + "", sel2);
+        }
+        else
+        {
+            if (E.inputType == "deleteContentBackward")
+            {
+                fieldInputBackspace(sel2);
+            }
+        }
+    }
+
+
+    document.getElementById("field1").addEventListener('input', fieldEvent);
+    document.getElementById("field1").addEventListener('focus', fieldClear);
+    document.getElementById("field1").addEventListener('blur', fieldClear);
+    document.getElementById("field2").addEventListener('input', fieldEvent);
+    document.getElementById("field2").addEventListener('focus', fieldClear);
+    document.getElementById("field2").addEventListener('blur', fieldClear);
+    fieldSetVariant(1);
 
   </script>
 </body>
